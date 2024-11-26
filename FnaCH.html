@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Five Nights At Chomp's DEMO</title>
+  <style>
+  #readMeButton {
+    padding: 10px 20px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 20px;
+
+}
+
+#infoMenu {
+    font-size: 10px;
+    display: none;
+    position: absolute;
+    top: 20%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    width: 1000px;
+    border-radius: 8px;
+    z-index: 100;
+}
+
+#closeButton {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#infoText {
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+    .game-info {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 99999;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    #death-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(139, 0, 0, 0.9);
+      color: white;
+      z-index: 10100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+    #death-screen h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+    #death-screen p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    #death-screen button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background-color: #b22222;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #death-screen button:hover {
+      background-color: #800000;
+    }
+    #floor-rectangle {
+      position: fixed; 
+      border-top: 10px solid black;
+      top: 350px;
+      right: -100px;
+      width: 3000px;
+      height: 200px;
+      background-color: #808080;
+    }
+    #fullscreenBtn {
+      position: fixed; 
+      bottom: 95px;     
+      left: 36%; 
+      width: 300px;
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1;
+    }
+    #fullscreenBtn:hover {
+      background-color: #FFA500;
+    }
+    .end-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: rgb(232, 238, 239);
+      font-size: 120px;
+      font-weight: bolder;
+      z-index: 100000000;
+    }
+    .end-screen span {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  display: inline-block;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+    .power-toggle-btn {
+  z-index: 10000;
+  background-color: black;
+  color: yellow;
+  padding: 10px 20px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  left: 200px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.power-toggle-btn.active {
+  background-color: yellow;
+  color: black;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+#camera-feed {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.static-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('Static.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+  transition: opacity 0.1s ease-in, opacity 0.1s ease-out 0.3s;
+}
+
+#Cam {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 9999;
+}
+
+#Cam .menu-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.7);
+  z-index: -1;
+}
+
+#Cam img.hallway-image {
+  position: relative;
+  margin: 0 auto;
+  display: block;
+  z-index: 1;
+}
+
+#Cam .camera-options {
+  position: fixed;
+  top: 10%;
+  right: 20px;
+  z-index: 2;
+  width: auto;
+  max-width: 300px;
+}
+
+#Cam .camera-options button {
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+#game-time {
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+}
+
+#night-counter {
+  font-size: 24px;
+  font-family: Arial, sans-serif;
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  color: white;
+}
+
+#win-message {
+  display: none;
+  font-size: 36px;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#office-vent-closed {
+  position: absolute;
+  transform: rotate(2.6deg);
+  top: 60px;
+  left: 60%;
+  display: block;
+  width: 400px;
+  height: auto;
+  z-index: 999;
+}
+
+.menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 60%;
+  max-width: 400px;
+}
+
+.logo-container {
+  position: relative;
+}
+
+#chomps-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.start-button {
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #fb311a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+.continue-button {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #fb311a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.start-button:hover,
+.continue-button:hover {
+  background-color: #c12700;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+.controls h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.controls button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 18px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.controls button:hover {
+  background-color: #007B9A;
+}
+
+.animatronic-controls {
+  position: absolute;
+  right: 10px;
+  top: 10%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.animatronic-controls h3 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.animatronic-controls button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.animatronic-controls button:hover {
+  background-color: #007B9A;
+}
+
+#fade-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgba(24,23,27,255);
+  color: white;
+  text-align: center;
+}
+
+#clawed-jumpscare-overlay, #chomps-jumpscare-overlay, #oldchomps-jumpscare-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 10010;
+  display: none;
+}
+#clawed-jumpscare-video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+#chomps-jumpscare-video {
+  z-index: 20000;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+#oldchomps-jumpscare-video {
+  z-index: 20000;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+#fog-overlay {
+  position: absolute;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+  display: block;
+}
+.game-screen {
+  display: none;
+  margin-top: 20px;
+}
+
+.camera-feed button {
+  position: fixed;
+  z-index: 9999;
+  bottom: 20px;
+  right: 20px;
+  width: 500px;
+  height: 50px;
+  background-color: white;
+  color: #000;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  line-height: 50px;
+  border: 3px solid black;
+  border-radius: 8px;
+  font-family: monospace;
+  cursor: pointer;
+}
+.camera-menu {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.camera-menu button {
+  margin: 10px;
+  padding: 10px;
+}
+.door-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+}
+
+.door-controls button {
+  width: 500px;
+  height: 50px;
+  background-color: red;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  line-height: 50px;
+  border: 3px solid black;
+  border-radius: 8px;
+  font-family: monospace;
+  cursor: pointer;
+  color: white;
+  outline: none;
+}
+
+#camera-menu {
+  top: 50%;
+  left: 50%;
+  display: none;
+  width: 300px;
+  margin: auto;
+}
+
+.camera-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.button-grid button {
+  z-index: 10000;
+  top: 10px;
+  left: 50%;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 9px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+.main-area {
+  grid-row: 1 / span 2;
+  grid-column: 2 / span 2;
+}
+
+.lab {
+  grid-row: 1;
+  grid-column: 4;
+}
+
+.power-room {
+  grid-row: 2;
+  grid-column: 4;
+}
+
+.hallway {
+  color: gray;
+  background-color: gray;
+  grid-row: 3;
+  grid-column: 3;
+}
+
+.office {
+  color: gray;
+  grid-row: 4;
+  grid-column: 3;
+  z-index: 10000;
+  background-color: gray;
+}
+
+.vent {
+  grid-row: 3;
+  grid-column: 4;
+  height: 50%;
+  width: 50%;
+}
+
+#hallway {
+  position: relative;
+  width: 20px;
+  height: 50px;
+  overflow: hidden;
+}
+
+.hallway-image {
+  transform: rotate(0.5deg);
+}
+
+button-grid:active {
+  background-color: green;
+}
+
+.overlay-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.chomps-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.camera-view {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: block;
+}
+
+.status {
+  font-size: 24px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: right;
+  margin: 0;
+}
+.difficulty-button {
+  background-color: white;
+  color: black;
+  font-weight: bolder;
+  font-size: 20px;
+  padding: 10px 20px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.difficulty-button:hover {
+  background-color: #f0f0f0;
+  border-color: #888;
+}
+
+.difficulty-level {
+  font-weight: bolder;
+  font-size: 18px;
+}
+.start-night-button {
+  background-color: white;
+  color: black;
+  font-weight: bolder;
+  font-size: 20px;
+  padding: 12px 24px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.start-night-button:hover {
+  background-color: #f0f0f0;
+  border-color: #888;
+}
+
+  </style>
+</head>
+<body>
+  <audio id="titleMusic" src="chomps.mp3" preload="auto" loop autoplay></audio>
+  <div class="end-screen" id="endScreen" style="display: none;">
+    <div id="endText"></div>
+  </div>
+<img id="office-vent-closed" src="OfficeVent.png" alt="Office Vent Closed" style="display: none;">
+<div id="floor-rectangle"></div>
+<div id="Cam" style="display:none;">
+  <img id="fog-overlay" src="Fog.png" alt="Fog Overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;">
+  <div class="menu-overlay"></div>
+  <img src="Cam.png" alt="Camera Unavailable" class="cam-image" style="width: 500px; height: 500px;">
+  <div class="camera-options">
+      <div class="button-grid">
+        <button class="lab" onclick="openCamera('4')">Storage</button>
+        <button class="hallway" onclick="Nothing()">Hallway</button>
+        <button class="main-area" onclick="openCamera('1')">Main Area</button>
+        <button class="office" onclick="Nothing()">Office</button>
+        <button class="power-room" onclick="openCamera('5')">Power Room</button>
+        <button class="vent" onclick="openCamera('3')">Vent</button>
+      </div>
+    </div>
+  </div>
+  </style>
+</head>
+<body>
+  <div class="static-overlay"></div>
+  <div id="fade-overlay"></div>
+  <div id="clawed-jumpscare-overlay">
+    <video id="clawed-jumpscare-video" width="100%" height="100%">
+      <source src="clawedjumpscare.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div id="chomps-jumpscare-overlay">
+    <video id="chomps-jumpscare-video" width="100%" height="100%">
+      <source src="chompsjumpscare.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div id="death-screen" style=" display: none;"</div>
+    <h2>GAME OVER</h2>
+    <p id="death-message">You failed to survive...</p>
+Reload
+  </div>
+  <div class="menu">
+    <div class="logo-container">
+        <img id="chomps-logo" src="chompslogodemo.png" alt="Chomps Logo">
+        <button class="start-button" onclick="showGameScreen()">Start Game</button>
+        <button class="continue-button" onclick="continueGame()">Continue</button>
+        <button id="readMeButton">READ ME</button>
+  </div>
+</div>
+  <div id="infoMenu">
+    <div id="infoText">
+        <h3>Game Information:</h3>
+        <p> This is Five Nights At Chomp's a game based on FNAF.
+        <p> Chomps is the candy corn robot on stage he will leave the stage and go to the hallway, to prevent him from going into the office turn OFF the power from the generator room, he will go away soon after.</p>
+        <p> Mouse Pointer is the gray mouse pointer seen on stage he will leave the stage and enter the hallway, he is quite the trickster and instead of jumpscaring you he will just disable your camera and door, to prevent this toggle the door. (You can only use the door if the power is on.)</p>
+        <p> Clawed is the glove seen on stage and is the most aggressive and will leave the stage and head to the vent in which you will have to open the vent camera to stop him from entering the office.</p>
+        <p> Remember there are 2 old robots inside the backroom in which you should not use or touch, if one of them exits (Unlikely) just use the same techniques for them as the others depending on where they are, remember the backroom is behind the door inside of storage and is always off camera.</p>
+        </div>
+    <button id="closeButton">Close</button>
+    </div>
+<div class="animatronic-controls" style="display: none;">
+    <h3>Controls:</h3>
+    <button onclick="setDifficulty()">Set Difficulty</button>
+    <button onclick="toggleAnimatronic('chomps')">Toggle Chomps</button>
+    <button onclick="toggleAnimatronic('mouse')">Toggle Mouse</button>
+    <button onclick="toggleAnimatronic('clawed')">Toggle Clawed</button>
+    <button onclick="quitGame()">Quit</button>
+</div>
+<div class="game-info">
+  <span id="timer"></span> AM | Night: <span id="night"></span>
+</div>
+  <div class="game-screen">
+    <h2></h2>
+    <div class="door-controls">
+      <button onclick="closeOfficeDoor()"></button>
+    </div>
+    <div class="camera-feed">
+      <button onclick="openCamerasMenu()"></button>
+    </div>
+<div></div>
+<div id="hallway"></div>
+<img src="Hallway.png" alt="Hallway" class="hallway-image" style="width: 375px; height: 375px; position: absolute; top: 0; left: 50%; transform: translateX(-50%);">
+ </div> <div class="power-controls">
+    <button class="power-toggle-btn" style ="display: none;"onclick="togglePower()">Toggle Power</button>
+</div>
+<audio id="clawedVentAudio" src="audio/ventfnaf2.mp3" preload="auto" style="display: none;"></audio>
+<audio id="jumpScareAudio" src="audio/fnaf2jumpscare.mp3" preload="auto" style="display: none;"></audio>
+<audio id="chompsAmbAudio" src="audio/fnaf2Amb.mp3" preload="auto" style="display: none;"></audio>
+<audio id="metalwalk" src="audio/MetalWalk.mp3" preload="auto" style="display: none;"></audio>
+<audio id="door-audio" src="Door.mp3"></audio>
+<audio id="error-audio" src="Error.mp3"></audio>
+<audio id="endSound" src="6am.mp3" preload="auto"></audio>
+<div id="audio-cues" class="audio-cues" style="display: none;"></div>
+</div>
+<script>
+let chompsDifficulty = 0;
+let mouseDifficulty = 0;
+let clawedDifficulty = 0;
+let currentHour = 0;
+let currentMinute = NaN;
+let currentSecond = NaN;
+let currentNight = 1;
+function loadProgress() {
+    let savedNight = localStorage.getItem('currentNight');
+    if (savedNight && !isNaN(savedNight)) {
+    return parseInt(savedNight);
+}
+    return 1;
+}
+
+function saveProgress() {
+    localStorage.setItem('currentNight', currentNight);
+    console.log(`Night: ${currentNight}`);
+}
+
+function nextNight() {
+    currentNight++;
+    saveProgress();
+    displayNight(currentNight);
+}
+
+function continueGame() {
+    currentNight = loadProgress();
+    showGameScreen();
+    displayNight(currentNight);
+}
+
+function startNewGame() {
+    currentNight = 1;
+    saveProgress();
+    showGameScreen();
+    displayNight(currentNight);
+}
+
+function toggleMusic(play) {
+  const music = document.getElementById('titleMusic');
+  if (play) {
+    music.play();
+  } else {
+    music.pause();
+  }
+}
+const readMeButton = document.getElementById('readMeButton');
+const infoMenu = document.getElementById('infoMenu');
+const closeButton = document.getElementById('closeButton');
+readMeButton.addEventListener('click', () => {
+infoMenu.style.display = 'block';
+});
+closeButton.addEventListener('click', () => {
+infoMenu.style.display = 'none';
+});
+document.addEventListener("DOMContentLoaded", function() {
+  const endText = "6 AM";
+  const endTextElement = document.getElementById("endText");
+  endText.split("").forEach((letter, index) => {
+    const span = document.createElement("span");
+    span.innerText = letter;
+    span.style.animationDelay = `${index * 0.1}s`;
+    endTextElement.appendChild(span);
+  });
+});
+function playEndSound() {
+  var audio = document.getElementById('endSound');
+  audio.play();
+}
+function formatTime(minute, second) {
+  return `${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+}
+function updateDifficulty() {
+  console.log(`Chomps AI Difficulty: ${chompsDifficulty}`);
+  console.log(`Mouse AI Difficulty: ${mouseDifficulty}`);
+  console.log(`Clawed AI Difficulty: ${clawedDifficulty}`);
+  if (currentNight === 1) { intervalTime = 20000; chompsDifficulty = 1; mouseDifficulty = 2; clawedDifficulty = 1; }
+  if (currentNight === 2) { intervalTime = 15500; chompsDifficulty = 2; mouseDifficulty = 4; clawedDifficulty = 2; }
+  if (currentNight === 3) { intervalTime = 10000; chompsDifficulty = 3; mouseDifficulty = 7; clawedDifficulty = 4; }
+}
+function updateUI() {
+  document.getElementById("timer").innerText = formatTime(
+  currentMinute === 0 ? 12 : currentMinute === 13 ? 1 : currentMinute, 
+  currentSecond === 60 ? 0 : currentSecond
+);
+  document.getElementById("night").innerText = currentNight === 8 ? 7 : currentNight;
+}
+let mouseTimer = 30
+const secondIntervalId = setInterval(() => {
+  currentSecond += 1;
+  if (mouseTimer > 0) {
+    mouseTimer--;}
+
+  console.log(`Mouse Time Left: ${mouseTimer}`);
+  if (currentMinute === 0 && currentSecond === 0) {
+    updateDifficulty();
+  }
+  updateUI();
+  if (currentSecond === 60) {
+    currentSecond = 0;
+    currentMinute += 1;
+  }
+  if (currentMinute === 6) {
+endNight()
+  }
+}, 250);
+loadProgress()
+function resetTimeValues() {
+  currentMinute = 7;
+  currentSecond = 10;
+  document.getElementById("timer").innerText = formatTime(currentMinute, currentSecond);
+}
+const displayIntervalId = setInterval(() => {
+  updateUI();
+}, 1000);
+function endNight() {
+    if (currentNight === 3) {
+    alert('Completed Demo!')
+    endNight()
+  }
+  playEndSound();
+  document.getElementById('endScreen').style.display = 'block';
+  if (currentNight < 3) {
+    currentNight += 1;
+    saveProgress()
+    currentMinute = currentMinute = 0;
+    currentSecond = 0;
+    clawedDifficulty = 0
+    chompsDifficulty = 0
+    mouseDifficulty = 0
+    clawedBackToStage()
+    setTimeout(() => {
+      updateDifficulty();
+    }, 5000);
+    setTimeout(function() {
+      document.getElementById('endScreen').style.display = 'none';
+    }, 11000);
+}}
+let isCameraOpen = false;
+let chompsInMainArea = true;
+let mouseInHallway = false;
+let clawedInVent = false;
+let powerOff = false;
+let aiDifficulty = 1;
+let movementInterval = 10000;
+let powerRoomCameraActive = false;
+let officeDoorClosed = false;
+let clawedVentTimer;
+let mouseInLab = false
+function Nothing() {
+  return; }
+  let showFog = true;
+  const cameras = {
+    mainArea: {
+      name: "Main Area",
+      isOpen: false,
+      toggle: function() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+          updateCameraFeed(this.name);
+          hidePowerToggleButton();
+        } else {
+          closeCameraFeed();
+        }
+      },
+      updateFeed: function() {
+        if (chompsInMainArea && mouseInMainArea && clawedInMainArea) {
+          console.log("Main Area Camera Feed: All animatronics are here.");
+          document.querySelector('.camera-image').src = 'S-All.png';
+        } else {
+          console.log("Main Area Camera Feed: No animatronics in sight.");
+          document.querySelector('.camera-image').src = 'S.png';
+        }
+      }
+    },
+    hallway: {
+      name: "Hallway",
+      isOpen: false,
+      toggle: function() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+          updateCameraFeed(this.name);
+          hidePowerToggleButton();
+        } else {
+          closeCameraFeed();
+        }
+      },
+      updateFeed: function() {
+        console.log("Hallway Camera Feed: Chomps is in the hallway.");
+        document.querySelector('.camera-image').src = 'ChompsHallway.png';
+      }
+    },
+    vent: {
+      name: "Vent",
+      isOpen: false,
+      toggle: function() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+          updateCameraFeed(this.name);
+          openVentCamera();
+        } else {
+          closeVentCamera();
+          closeCameraFeed();
+        }
+      },
+      updateFeed: function() {
+        if (clawedInVent) {
+          console.log("Vent Camera Feed: Clawed is in the vent.");
+          document.querySelector('.camera-image').src = 'Vent.png';
+        } else {
+          console.log("Vent Camera Feed: No animatronics in sight.");
+          document.querySelector('.camera-image').src = 'VentEmpty.png';
+        }
+      }
+    },
+    lab: {
+      name: "Lab",
+      isOpen: false,
+      toggle: function() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+          updateCameraFeed(this.name);
+          hidePowerToggleButton();
+        } else {
+          closeCameraFeed();
+        }
+      },
+      updateFeed: function() {
+        console.log("Lab Camera Feed: The lab is quiet.");
+        document.querySelector('.camera-image').src = 'Lab.png';
+      }
+    },
+    powerRoom: {
+      name: "Power Room",
+      isOpen: false,
+      toggle: function() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+          updateCameraFeed(this.name);
+          showPowerToggleButton();
+        } else {
+          closeCameraFeed();
+        }
+      },
+      updateFeed: function() {
+        console.log("Power Room Camera Feed: Active.");
+        document.querySelector('.camera-image').src = 'PowerRoomActive.png';
+      }
+    }
+  };
+function playDoorClosingSound() {
+  const doorAudio = document.getElementById('door-audio');
+  doorAudio.play();
+}
+function playErrorSound() {
+  const errorAudio = document.getElementById('error-audio');
+  errorAudio.play();
+}
+let lastActionTime = 0;
+const cooldownDuration = 1200;
+let doorTimer = 30;
+let doorForcedOpen = false;
+
+function closeOfficeDoor() {
+  const currentTime = Date.now();
+  if (currentTime - lastActionTime >= cooldownDuration) {
+    if (!doorForcedOpen && powerRoomActive) {
+      officeDoorClosed = !officeDoorClosed;
+      lastActionTime = currentTime;
+      var hallwayImage = document.querySelector('.hallway-image');
+      if (officeDoorClosed) {
+        playAudioCue("Door Closed");
+        hallwayImage.src = 'OfficeDoorClosed.png';
+        playDoorClosingSound();
+        doorTimer = 30;
+      } else {
+        playAudioCue("Door Opened");
+        hallwayImage.src = 'Hallway.png';
+        playDoorClosingSound();
+        doorForcedOpen = true;
+        setTimeout(() => {
+          doorForcedOpen = false;
+        }, 2000);
+      }
+    } else {
+      playErrorSound();
+    }
+  }
+}
+
+function updateDoorTimer() {
+  if (officeDoorClosed && !doorForcedOpen) {
+    if (doorTimer > 0) {
+      doorTimer--;
+    } else {
+      closeOfficeDoor()
+      doorTimer = 30;
+      doorForcedOpen = true
+      setTimeout(() => {
+          doorForcedOpen = false;
+        },5000);
+    }
+    console.log(`Door Time Left: ${doorTimer}`);
+  }
+}
+
+setInterval(updateDoorTimer, 1000);
+
+function showGameScreen() {
+  currentMinute = 0;
+  currentSecond = 0;
+  document.querySelector('.menu').style.display = 'none';
+  document.querySelector('.game-screen').style.display = 'block';
+  document.getElementById('office-vent-closed').style.display = 'block';
+  startGame();
+  toggleMusic(false);
+}
+let mouseAtDoor = false;
+let mouseInMainArea = true;
+function playStaticCue() {
+  const audioCuesDiv = document.getElementById('audio-cues');
+  const audio = new Audio('static2.mp3');
+  audio.volume = 0.7;
+  audio.play();
+  console.log("Mouse move sound is playing.");
+}
+function triggerStaticOverlay() {
+  var staticOverlay = document.querySelector('.static-overlay');
+  if (!staticOverlay) {
+    console.error('Static overlay not found!');
+    return;
+  }
+  staticOverlay.style.display = 'block';
+  staticOverlay.style.opacity = 1;
+  setTimeout(function() {
+    staticOverlay.style.opacity = 0;
+  }, 490);
+  setTimeout(function() {
+    staticOverlay.style.display = 'none';
+  }, 1000);
+}
+function startGame() {
+  setInterval(() => {
+    moveAnimatronics();
+  }, movementInterval);
+  listenToPlayerActions();
+}
+let cameraOpen = false;
+function openCamera(cameraId) {
+  var cameraName = "";
+  cameraOpen = false;
+  document.getElementById('fog-overlay').style.display = 'none';
+  switch(cameraId) {
+    case '1':
+      cameraName = "Main Area";
+      updateCameraFeed(cameraName);
+      ventCameraOpen = false;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'none';
+      cameraOpen = true;
+      triggerStaticOverlay();
+      break;
+    case '2':
+      cameraName = "Hallway";
+      updateCameraFeed(cameraName);
+      ventCameraOpen = false;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'none';
+      cameraOpen = true;
+      triggerStaticOverlay();
+      break;
+    case '3':
+      updateCameraFeed("Vent");
+      cameraName = "Vent";
+      ventCameraOpen = true;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'none';
+      cameraOpen = true;
+      triggerStaticOverlay();
+      break;
+    case '4':
+      cameraName = "Lab";
+      updateCameraFeed(cameraName);
+      ventCameraOpen = false;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'none';
+      cameraOpen = true;
+      triggerStaticOverlay();
+      break;
+    case '5':
+      cameraName = "Power Room";
+      updateCameraFeed(cameraName);
+      ventCameraOpen = false;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'block';
+      cameraOpen = true;
+      triggerStaticOverlay();
+      break;
+    default:
+      alert("Invalid camera selection.");
+      ventCameraOpen = false;
+      playFlipSound();
+      document.querySelector('.power-toggle-btn').style.display = 'none';
+      cameraOpen = true;
+      break;
+      playFlipSound();
+  }
+}
+function fadeScreen() {
+  const fadeOverlay = document.getElementById('fade-overlay');
+  fadeOverlay.style.opacity = 1;
+  setTimeout(() => {
+    fadeOverlay.style.opacity = 0;
+  }, 1500);
+}
+let powerRoomActive = true;
+let chompsActive = true;
+let mouseActive = true;
+let clawedActive = true;
+function toggleFog() {
+  const fogOverlay = document.getElementById('fog-overlay');
+  showFog = !showFog;
+  fogOverlay.style.display = showFog ? 'block' : 'none';
+}
+let maincameraopen = false;
+function updateCameraFeed(cameraName) {
+  console.log(`You are viewing the camera feed for: ${cameraName}`);
+  document.getElementById('fog-overlay').style.display = 'none';
+  switch(cameraName) {
+    case "Main Area":
+    if (chompsInMainArea && !mouseInMainArea && clawedInVent) {
+  console.log("Main Area Camera Feed: Chomp is there..");
+  document.querySelector('.cam-image').src = 'S-Chomp.png';  
+  document.getElementById('fog-overlay').style.display = 'block';
+} else if (chompsInMainArea && mouseInMainArea && clawedInVent) {
+  console.log("Main Area Camera Feed: Chomp and Mouse are there.");
+  document.querySelector('.cam-image').src = 'S-ChompMouse.png';
+  document.getElementById('fog-overlay').style.display = 'block';
+} else if (!chompsInMainArea && mouseInMainArea && !clawedInVent) {
+  console.log("Main Area Camera Feed: Clawed and Mouse are here.");
+  document.querySelector('.cam-image').src = 'S-ClawMouse.png'; 
+  document.getElementById('fog-overlay').style.display = 'block';
+} else if (chompsInMainArea && !mouseInMainArea && !clawedInVent) {
+  console.log("Main Area Camera Feed: Chomp and Clawed are here.");
+  document.querySelector('.cam-image').src = 'S-ClawChomp.png'; 
+  document.getElementById('fog-overlay').style.display = 'block';
+} else if (chompsInMainArea && mouseInMainArea && !clawedInVent) {
+  console.log("Main Area Camera Feed: All animatronics are here.");
+  document.querySelector('.cam-image').src = 'S-All.png';
+  document.getElementById('fog-overlay').style.display = 'block';
+} else if (!chompsInMainArea && !mouseInMainArea && !clawedInVent) {
+  console.log("Main Area Camera Feed: No animatronics in sight.");
+  document.querySelector('.cam-image').src = 'S';
+  document.getElementById('fog-overlay').style.display = 'block';
+}
+      break;
+    case "Vent":
+      if (clawedInVent) {
+  console.log("Vent Camera Feed: Clawed is in the vent.");
+  document.querySelector('.cam-image').src = 'ClawVent.png';
+  document.getElementById('fog-overlay').style.display = 'block';
+} else {
+  document.querySelector('.cam-image').src = 'Vent.png';
+  document.getElementById('fog-overlay').style.display = 'block';
+  console.log("Vent Camera Feed: No animatronics in sight.");
+}
+      break;
+    case "Lab":
+  console.log("Storage Camera Feed: The Storage is quiet.");
+  document.querySelector('.cam-image').src = 'Storage.png';
+  document.getElementById('fog-overlay').style.display = 'block';
+      break;
+    case "Power Room":
+      if (powerRoomCameraActive) {
+    console.log("Power Room Camera Feed: Active.");
+    document.querySelector('.cam-image').src = 'Power.png';
+    document.getElementById('fog-overlay').style.display = 'block';
+      } else {
+    console.log("Power Room Camera Feed: Inactive.");
+    document.querySelector('.cam-image').src = 'Power.png';
+    document.getElementById('fog-overlay').style.display = 'block';
+      }
+      break;
+    default:
+      console.log("Error: Camera not found.");
+  }
+}
+let mouseReturnDelay = 15;
+let powerButtonClicked = false;
+function togglePower() {
+    const powerBtn = document.querySelector('.power-toggle-btn');
+    powerRoomActive = !powerRoomActive;
+    if (powerRoomActive) {
+        console.log("Power is now ACTIVE.");
+        powerBtn.classList.add('active');
+        powerBtn.innerText = "Toggle OFF";
+    } else {
+        console.log("Power is now INACTIVE.");
+        powerBtn.classList.remove('active');
+        powerBtn.innerText = "Toggle ON";
+    }
+}
+function showPowerToggleButton() {
+    const powerBtn = document.querySelector('.power-toggle-btn');
+    powerBtn.style.display = 'block';
+    console.log("You can now toggle power from the Power Room.");
+}
+function hidePowerToggleButton() {
+    const powerBtn = document.getElementById('powerToggleBtn');
+    setTimeout(() => {
+        powerBtn.style.display = 'none';
+    }, 300);
+}
+const flipSound = new Audio('Flip.ogg');
+function playFlipSound() {
+    flipSound.play();
+}
+document.addEventListener('keydown', function(event) {
+    if (event.key === '>' || event.key === '>') {
+        openCamerasMenu();
+        console.log("Camera menu triggered.");
+    }
+    if (event.key === '<' || event.key === '<') {
+        closeOfficeDoor();
+        console.log("Office door toggled.");
+    }
+});
+function resetGame() {
+    setTimeout(() => {
+        window.location.reload();
+    }, 3000);
+}
+let mouseDelayTime = 0;
+function playJumpScareSound() {
+    const audio = new Audio('fnaf2jumpscare.mp3');
+    audio.play();
+    console.log("Jump scare sound is playing.");
+}
+function moveAnimatronics() {
+    if (currentMinute > 0 && chompsActive && !mouseInHallway && chompsInMainArea && Math.random() < (chompsDifficulty / 20)) {
+        if (officeDoorClosed) {closeOfficeDoor()}
+        var camMenu = document.getElementById('Cam');
+        const fadeOverlay = document.getElementById('fog-overlay');
+        if (camMenu.style.display === 'block') { triggerStaticOverlay() }
+        chompsInMainArea = false;
+        chompsInHallway = true;
+        console.log("Chomps is moving to the Hallway...");
+        playChompsMoveSound();
+        setTimeout(function() {
+        playChompsMoveSound();
+        }, 5500);
+        fadeScreen();
+        if (!officeDoorClosed) {
+            document.querySelector('.hallway-image').src = 'ChompsHallway.png';
+            document.getElementById('fog-overlay').style.display = 'none';
+        }
+        const waitTime = Math.floor(Math.random() * 16) + 15;
+        setTimeout(() => {
+            if (chompsActive && chompsInHallway && powerRoomActive) {
+                fadeScreen();
+                console.log("JUMP SCARE: Chomps reached the hallway with power still ON!");
+                triggerChompsJumpscare();
+            } else {
+                console.log("Chomps reached the hallway. Power is OFF, no jump scare.");
+                fadeScreen();
+                document.querySelector('.hallway-image').src = 'Hallway.png';
+                document.getElementById('fog-overlay').style.display = 'none';
+                chompsInHallway = false;
+                chompsInMainArea = true;
+                console.log("Chomps is moving back to the Main Area.");
+            }
+        }, waitTime * 1000);
+    }
+    if (mouseTimer === 0 && currentMinute > 0 && !mouseInHallway && mouseActive && !chompsInHallway && Math.random() < (mouseDifficulty / 5)) {       mouseInMainArea = false;
+        mouseInHallway = true;
+        mouseInMainArea = false
+        playStaticCue();
+        fadeScreen();
+        var camMenu = document.getElementById('Cam');
+        const fadeOverlay = document.getElementById('fog-overlay');
+        if (camMenu.style.display === 'block' && maincameraopen) { triggerStaticOverlay() }
+        if (!officeDoorClosed) {
+            console.log("Mouse is moving to the hallway...");
+            document.querySelector('.hallway-image').src = 'MouseHallway.png';
+            document.getElementById('fog-overlay').style.display = 'none';
+        }
+    }
+
+    if (mouseActive && mouseInHallway && !mouseAtDoor) {
+        mouseDelayTime = Math.floor(Math.random() * 10) + 5;
+        console.log(`Mouse is in the hallway. It will take ${mouseDelayTime} seconds before moving to the door...`);
+        setTimeout(() => {
+            mouseAtDoor = true;
+            mouseInHallway = false;
+            fadeScreen();
+            console.log("Mouse has reached the office door!");
+            if (!officeDoorClosed && mouseAtDoor && !mouseInMainArea) {
+                document.querySelector('.hallway-image').src = 'MouseDoor.png';
+            document.getElementById('fog-overlay').style.display = 'none';
+            document.querySelector('.door-controls').style.display = 'none';
+            document.querySelector('.camera-feed').style.display = 'none'
+            mouseTimer = 20
+            setTimeout(() => {
+            mouseAtDoor = false
+            mouseInMainArea = true
+            fadeScreen()
+            document.querySelector('.hallway-image').src = 'Hallway.png';
+            document.querySelector('.door-controls').style.display = 'block';
+            document.querySelector('.camera-feed').style.display = 'block';
+                    }, 10000);}
+            if (officeDoorClosed) {
+                fadeScreen();
+                document.getElementById('fog-overlay').style.display = 'none';
+                console.log("Office door is closed. Mouse will return to Main Area.");
+                document.querySelector('.door-controls').style.display = 'block';
+                document.querySelector('.camera-feed').style.display = 'block';
+                mouseAtDoor = false;
+                mouseInMainArea = true;
+                console.log("Mouse will stay in the main area for 20 seconds.");
+                mouseTimer = 20
+                setTimeout(() => {
+                    return;
+                }, mouseReturnDelay * 1000);
+            } else {
+                if (!officeDoorClosed) {
+                    setTimeout(() => {
+                        return;
+                    }, 3000);
+                }
+            }
+        }, mouseDelayTime * 1000);
+    }
+    if (currentMinute > 0 && Math.random() < (clawedDifficulty / 20) && clawedActive && !clawedInVent) {
+        moveClawedToVent();
+        var camMenu = document.getElementById('Cam');
+        const fadeOverlay = document.getElementById('fog-overlay');
+        if (camMenu.style.display === 'block' && maincameraopen) { triggerStaticOverlay() }
+    }
+    if (clawedActive && clawedInVent && clawedVentTimeLeft > 0) {
+        clawedVentTimeLeft--;
+        console.log(`Clawed in the vent. Time left: ${clawedVentTimeLeft}s`);
+        if (clawedVentTimeLeft <= 0) {
+            triggerClawedJumpscare();
+        }
+    
+}}
+function holdMouseInMainArea() {
+  console.log("Mouse will stay in the main area for 15 seconds.");
+  setTimeout(() => {
+    console.log("Mouse has stayed in the main area for 15 seconds.");
+    mouseInMainArea = true;
+    mouseInHallway = false;
+  }, 15000);
+}
+function stopGame() {
+  gameRunning = false;
+  chompsActive = false;
+  clawedActive = false;
+  mouseActive = false;
+}
+let ventCameraOpen = false;
+let clawedVentTimeLeft = 0;
+function playClawedVentSound() {
+  const audio = new Audio('ventfnaf2.mp3');
+  audio.play();
+}
+function moveClawedToVent() {
+  clawedInVent = true;
+  var camMenu = document.getElementById('Cam');
+  const fadeOverlay = document.getElementById('fog-overlay');
+  if (camMenu.style.display === 'block') {
+    setTimeout(function() {
+      triggerStaticOverlay();
+      openCamera('3');
+    }, 2000);
+  }
+  clawedVentTimeLeft = Math.floor(Math.random() * 1) + 7;
+  playClawedVentSound();
+  clawedVentTimer = setInterval(() => {
+    if (clawedVentTimeLeft > 0) {
+      clawedVentTimeLeft--;
+    }
+    if (clawedVentTimeLeft <= 0) {
+      clearInterval(clawedVentTimer);
+      if (!ventCameraOpen) {
+        triggerClawedJumpscare();
+      } else if (ventCameraOpen && clawedActive) {
+        clawedBackToStage();
+        setTimeout(function() {
+          triggerStaticOverlay();
+          openCamera('3');
+        }, 100);
+      }
+    }
+  }, 1000);
+}
+function triggerJumpScare(message) {
+  const deathMessageElement = document.getElementById('death-message');
+  deathMessageElement.textContent = message || 'You were caught by an animatronic!';
+  document.getElementById('death-screen').style.display = 'block';
+  stopGame();
+  playJumpScareSound();
+}
+function pauseGame() {
+  clearInterval(gameLoop);
+}
+let gameLoop;
+function startGame() {
+  document.querySelector('.menu').style.display = 'none';
+  document.querySelector('.game-screen').style.display = 'block';
+  document.querySelector('.animatronic-controls').style.display = 'none';
+  gameLoop = setInterval(() => {
+    moveAnimatronics();
+  }, movementInterval);
+}
+function retryGame() {
+  resetGame();
+}
+function triggerClawedJumpscare() {
+  var camMenu = document.getElementById('Cam');
+  if (camMenu && camMenu.style.display === 'block') {
+    openCamerasMenu();
+  }
+  document.getElementById('fog-overlay').style.display = 'none';
+  var jumpscareOverlay = document.getElementById('clawed-jumpscare-overlay');
+  var jumpscareVideo = document.getElementById('clawed-jumpscare-video');
+  jumpscareOverlay.style.display = 'block';
+  jumpscareVideo.play();
+  document.getElementById("timer").style.display = 'none'
+    document.getElementById("night").style.display = 'none'
+    currentMinute = -10000000000000000000000000000000000000000
+    currentSecond = -10000000000000000000000000000000000000000
+  setTimeout(function() {
+    jumpscareVideo.pause();
+    jumpscareOverlay.style.display = 'none';
+    document.getElementById('death-screen').style.display = 'block';
+    if (currentNight === 8 || currentNight === 7 && math.random() < 1) {
+    document.getElementById('death-screen').style.display = 'none';
+    document.getElementById('glitchGameFrame').style.display = 'block';
+    setTimeout(triggerOldChompsJumpscare, 30000);
+    document.getElementById('office-vent-closed').style.display = 'none';
+    document.getElementById('floor-rectangle').style.display = 'none';
+    document.querySelector('.door-controls').style.display = 'none';
+    document.querySelector('.camera-feed').style.display = 'none';
+    document.querySelector('#hallway').style.display = 'none';
+    document.querySelector('.hallway-image').style.display = 'none';
+  }
+  }, 7000);
+}
+function triggerChompsJumpscare() {
+  var camMenu = document.getElementById('Cam');
+  if (camMenu && camMenu.style.display === 'block') {
+    openCamerasMenu();
+  }
+  document.getElementById('fog-overlay').style.display = 'none';
+  var jumpscareOverlay = document.getElementById('chomps-jumpscare-overlay');
+  var jumpscareVideo = document.getElementById('chomps-jumpscare-video');
+  jumpscareOverlay.style.display = 'block';
+  jumpscareVideo.play();
+  document.getElementById("timer").style.display = 'none'
+    document.getElementById("night").style.display = 'none'
+    currentMinute = -10000000000000000000000000000000000000000
+    currentSecond = -10000000000000000000000000000000000000000
+  setTimeout(function() {
+    jumpscareVideo.pause();
+    jumpscareOverlay.style.display = 'none';
+    document.getElementById('death-screen').style.display = 'block';
+  }, 8000);
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  function enterFullscreen() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    }
+    fullscreenBtn.innerText = "Exit Fullscreen";
+  }
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    fullscreenBtn.innerText = "Go Fullscreen";
+  }
+  fullscreenBtn.addEventListener('click', function() {
+    if (!document.fullscreenElement &&
+        !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement &&
+        !document.msFullscreenElement) {
+      enterFullscreen();
+    } else {
+      exitFullscreen();
+    }
+  });
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "f" || event.key === "F") {
+      if (!document.fullscreenElement &&
+          !document.mozFullScreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.msFullscreenElement) {
+        enterFullscreen();
+      } else {
+        exitFullscreen();
+      }
+    }
+  });
+});
+function showMenu() {
+  window.location.reload();
+}
+function resetGame() {
+  stopGame();
+}
+function clawedBackToStage() {
+  if (clawedActive && clawedInVent) {
+    clawedInVent = false;
+    metalwalk();
+    clearInterval(clawedVentTimer);
+    clawedVentTimeLeft = 0;
+  } else {
+    return;
+  }
+}
+function updateAnimatronicsStatus(message) {
+  const statusDiv = document.getElementById('animatronics-status');
+  statusDiv.innerHTML = `<p>${message}</p>`;
+}
+function playAudioCue(cue) {
+  const audioCuesDiv = document.getElementById('audio-cues');
+  audioCuesDiv.innerHTML = `<p>*Audio Cue*: ${cue}</p>`;
+}
+function openCamerasMenu() {
+  var camMenu = document.getElementById('Cam');
+  if (camMenu.style.display === 'block') {
+    document.querySelector('.power-toggle-btn').style.display = 'none';
+    document.getElementById('fog-overlay').style.display = 'none';
+    camMenu.style.display = 'none';
+  } else {
+    openCamera('1');
+    camMenu.style.display = 'block';
+  }
+}
+let chompsInHallway = false;
+function closeCamera(cameraId) {
+  if (cameraId === '5') {
+    hidePowerToggleButton();
+  }
+}
+function playJumpScareSound() {
+  const audio = new Audio('fnaf2jumpscare.mp3');
+  audio.play();
+}
+function metalwalk() {
+  const audio = new Audio('MetalWalk.mp3');
+  audio.play();
+}
+function playChompsMoveSound() {
+  const audio = new Audio('fnaf2Amb.mp3');
+  audio.play();
+}
+</script>
+</body>
+</html>
