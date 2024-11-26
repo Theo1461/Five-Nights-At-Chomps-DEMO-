@@ -792,21 +792,8 @@ function saveProgress() {
     console.log(`Night: ${currentNight}`);
 }
 
-function nextNight() {
-    currentNight++;
-    saveProgress();
-    displayNight(currentNight);
-}
-
 function continueGame() {
     currentNight = loadProgress();
-    showGameScreen();
-    displayNight(currentNight);
-}
-
-function startNewGame() {
-    currentNight = 1;
-    saveProgress();
     showGameScreen();
     displayNight(currentNight);
 }
@@ -1088,6 +1075,7 @@ function showGameScreen() {
   document.querySelector('.game-screen').style.display = 'block';
   document.getElementById('office-vent-closed').style.display = 'block';
   startGame();
+  saveProgress()
   toggleMusic(false);
 }
 let mouseAtDoor = false;
@@ -1118,7 +1106,6 @@ function startGame() {
   setInterval(() => {
     moveAnimatronics();
   }, movementInterval);
-  listenToPlayerActions();
 }
 let cameraOpen = false;
 function openCamera(cameraId) {
